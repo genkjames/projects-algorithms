@@ -1,1 +1,1 @@
-# spotify-questions
+# projects-algorithms
