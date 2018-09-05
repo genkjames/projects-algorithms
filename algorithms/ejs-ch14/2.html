@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+  <h1>Heading with a <span>span</span> element.</h1>
+  <p>A paragraph with <span>one</span>, <span>two</span>
+    spans.</p>
+
+  <script>
+// The document.getElementsByTagName method returns all child elements with a given tag name. Implement your own version of this as a function that takes a node and a string (the tag name) as arguments and returns an array containing all descendant element nodes with the given tag name.
+
+// To find the tag name of an element, use its nodeName property. But note that this will return the tag name in all uppercase. Use the toLowerCase or toUpperCase string methods to compensate for this.
+
+    function byTagName(node, tagName) {
+    const arr = [];
+
+    function getNode(node) {
+      node.childNodes.forEach((element, i) => {
+        let child = element;
+        if (child.nodeType == document.ELEMENT_NODE) {
+          if (child.nodeName.toLowerCase() == tagName) arr.push(child);
+          getNode(child);
+        }
+      })
+    }
+
+    getNode(node);
+    return arr;
+  }
+
+    console.log(byTagName(document.body, "h1").length);
+    // → 1
+    console.log(byTagName(document.body, "span").length);
+    // → 3
+    let para = document.querySelector("p");
+    console.log(byTagName(para, "span").length);
+    // → 2
+  </script>
+</body>
+</html>
