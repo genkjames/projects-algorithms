@@ -150,17 +150,11 @@ for (let op of ["+", "-", "*", "/", "==", "<", ">"]) {
 
 // Modify these definitions...
 
-topScope.array = (...values) => {
-  return values.map(val => val);
-};
+topScope.array = (...values) => values;
 
-topScope.length = (array) => {
-  return array.length;
-};
+topScope.length = (array) => array.length;
 
-topScope.element = (array, n) => {
-  return array[n];
-};
+topScope.element = (array, n) => array[n];
 
 function run(program) {
   return evaluate(parse(program), Object.create(topScope));
