@@ -14,12 +14,6 @@ function parseExpression(program) {
   return parseApply(expr, program.slice(match[0].length));
 }
 
-function skipSpace(string) {
-  let first = string.search(/\S/);
-  if (first == -1) return "";
-  return string.slice(first);
-}
-
 function parseApply(expr, program) {
   program = skipSpace(program);
   if (program[0] != "(") {
@@ -137,16 +131,13 @@ const topScope = Object.create(null);
 topScope.true = true;
 topScope.false = false;
 
-topScope.print = value => {
-  console.log(value);
-  return value;
-};
+topScope.print = value => value;
 
 for (let op of ["+", "-", "*", "/", "==", "<", ">"]) {
   topScope[op] = Function("a, b", `return a ${op} b;`);
 }
 
-// Exercise1: Add support for arrays to Egg by adding the following three functions to the top scope: array(...values) to construct an array containing the argument values, length(array) to get an array’s length, and element(array, n) to fetch the nth element from an array.
+// Exercise 1: Add support for arrays to Egg by adding the following three functions to the top scope: array(...values) to construct an array containing the argument values, length(array) to get an array’s length, and element(array, n) to fetch the nth element from an array.
 
 // Modify these definitions...
 
@@ -160,14 +151,30 @@ function run(program) {
   return evaluate(parse(program), Object.create(topScope));
 }
 
-run(`
-do(define(sum, fun(array,
-     do(define(i, 0),
-        define(sum, 0),
-        while(<(i, length(array)),
-          do(define(sum, +(sum, element(array, i))),
-             define(i, +(i, 1)))),
-        sum))),
-   print(sum(array(1, 2, 3))))
-`);
-// → 6
+// run(`
+// do(define(sum, fun(array,
+//      do(define(i, 0),
+//         define(sum, 0),
+//         while(<(i, length(array)),
+//           do(define(sum, +(sum, element(array, i))),
+//              define(i, +(i, 1)))),
+//         sum))),
+//    print(sum(array(1, 2, 3))))
+// `);
+
+// Exercise 2: It would be nice if we could write comments in Egg. For example, whenever we find a hash sign (#), we could treat the rest of the line as a comment and ignore it, similar to // in JavaScript.
+
+// We do not have to make any big changes to the parser to support this. We can simply change skipSpace to skip comments as if they are whitespace so that all the points where skipSpace is called will now also skip comments. Make this change. 
+
+// Solution by author
+function skipSpace(string) {
+  let skippable = string.match(/(\s|#.*)*/);
+  return string.slice(skippable[0].length);
+}
+
+console.log(parse("# hello\nx"));
+
+console.log(parse("a # one\n   # two\n()"));
+// → {type: "apply",
+//    operator: {type: "word", name: "a"},
+//    args: []}
