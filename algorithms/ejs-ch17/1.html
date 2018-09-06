@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+  <canvas width="600" height="200"></canvas>
+  <script>
+    let cx = document.querySelector("canvas").getContext("2d");
+
+    function trapezoid(x, y) {
+      cx.beginPath();
+      cx.moveTo(x, y);
+      cx.lineTo(x + 60, y);
+      cx.lineTo(x + 80, y + 40);
+      cx.lineTo(x - 20, y + 40);
+      cx.closePath();
+      cx.stroke();
+    }
+
+    trapezoid(30, 30);
+
+    function diamond(x, y) {
+      cx.beginPath()
+      cx.moveTo(x, y);
+      cx.lineTo(x + 40, y + 40);
+      cx.lineTo(x, y + 80);
+      cx.lineTo(x - 40, y + 40);
+      cx.closePath();
+      cx.fillStyle = 'red';
+      cx.fill();
+    }
+
+    diamond(170, 15);
+
+    function zigzag(x, y) {
+      cx.beginPath();
+      cx.moveTo(x, y);
+      for ( let i = 0; i < 12; i++) {
+        let yVal = 7 * (i + 1);
+        if (i % 2 === 0) cx.lineTo(x + 60, y + yVal);
+        else cx.lineTo(x, y + yVal);
+      }
+      cx.stroke();
+    }
+
+    zigzag(230, 15);
+
+    // Solution by author
+    function spiral(x, y) {
+      let radius = 50, xCenter = x + radius, yCenter = y + radius;
+      cx.beginPath();
+      cx.moveTo(xCenter, yCenter);
+      for (let i = 0; i < 300; i++) {
+        let angle = i * Math.PI / 30;
+        let dist = radius * i / 300;
+        cx.lineTo(xCenter + Math.cos(angle) * dist,
+                  yCenter + Math.sin(angle) * dist);
+      }
+      cx.stroke();
+    }
+
+    spiral(310, 12);
+
+    // Solution by author
+    function star(x, y) {
+      let radius = 50, xCenter = x + radius, yCenter = y + radius;
+      cx.beginPath();
+      cx.moveTo(xCenter + radius, yCenter);
+      for (let i = 1; i <= 8; i++) {
+        let angle = i * Math.PI / 4;
+        cx.quadraticCurveTo(xCenter, yCenter,
+                            xCenter + Math.cos(angle) * radius,
+                            yCenter + Math.sin(angle) * radius);
+      }
+      cx.fillStyle = "gold";
+      cx.fill();
+    }
+
+    star(430 , 10);
+  </script>
+</body>
+</html>
