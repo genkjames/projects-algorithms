@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <style type="text/css">
+    #grid {
+      width: 600px;
+      margin: 50px auto 30px;
+    }
+
+    button {
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="grid"></div>
+  <button id="next">Next generation</button>
+
+  <script>
+    // Conway’s Game of Life is a simple simulation that creates artificial “life” on a grid, each cell of which is either alive or not. Each generation (turn), the following rules are applied:
+
+    // Any live cell with fewer than two or more than three live neighbors dies.
+
+    // Any live cell with two or three live neighbors lives on to the next generation.
+
+    // Any dead cell with exactly three live neighbors becomes a live cell.
+
+    // A neighbor is defined as any adjacent cell, including diagonally adjacent ones.
+
+    // Note that these rules are applied to the whole grid at once, not one square at a time. That means the counting of neighbors is based on the situation at the start of the generation, and changes happening to neighbor cells during this generation should not influence the new state of a given cell.
+
+    // Implement this game using whichever data structure you find appropriate. Use Math.random to populate the grid with a random pattern initially. Display it as a grid of checkbox fields, with a button next to it to advance to the next generation. When the user checks or unchecks the checkboxes, their changes should be included when computing the next generation.
+
+    const width = 30, height = 20;
+
+    (function createGrid() {
+      const grid = document.querySelector('#grid');
+
+      for (let i = 0; i < width * height; i++) {
+        let checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = checkedBox();
+        let edge = edges(i);
+        checkbox.dataset.num = i;
+        checkbox.dataset.edge = edge;
+        checkbox.dataset.siblings = getSiblings(edge, i);
+        grid.appendChild(checkbox);
+        if (i % width === (width - 1)) grid.appendChild(document.createElement('br'));      
+      }
+    })();
+
+    function getSiblings(edge, num) {
+      const bottom = [num + width - 1, num + width, num + width + 1];
+      const top = [num - width - 1, num - width, num - width + 1];
+      switch(edge) {
+        case 'top-left':
+          return [1, num + width, num + width + 1];
+        case 'left':
+          return [num - width, num - width + 1, num + 1, num + width, num + width + 1];
+        case 'top':
+          return [num - 1, num + 1, ...bottom];
+        case 'top-right':
+          return [num - 1, num + width, num + width - 1];
+        case 'right':
+          return [num - width - 1, num - width, num - 1, num + width - 1, num + width];
+        case 'bottom-left':
+          return [num + 1, num - width, num - width + 1];
+        case 'bottom':
+          return [num - 1, num + 1, ...top];
+        case 'bottom-right':
+          return [num - 1, num - width - 1, num - width];
+        default:
+          return [...top, num - 1, num + 1, ...bottom];
+      }
+    }
+
+    function edges(i) {
+      let edge = 'none'
+      if (i % width === 0) edge = 'left';
+      if (i % width === (width - 1)) edge = 'right';
+      if (i < width) edge = 'top';
+      if (i > (width * height) - width) edge = 'bottom';
+      if (i === 0) edge = 'top-left';
+      if (i === (width - 1)) edge = 'top-right';
+      if (i === ((width * height) - width)) edge = 'bottom-left';
+      if (i === ((width * height) - 1)) edge = 'bottom-right';
+      return edge;
+    }
+
+    function checkedBox() {
+      return Boolean(Math.round(Math.random()));
+    }
+
+    function nextGen() {
+      const checkboxes = document.querySelectorAll('[type="checkbox"]');
+      checkboxes.forEach(box => {
+        const status = box.checked;
+        const lives = (checkSiblings(box));
+        
+        if (status) {
+          if (lives < 2 || lives > 3) box.checked = false;
+        } else {
+          if (lives === 3) box.checked = true;
+        }
+      })
+    }
+
+    function checkSiblings(box) {
+      let lives = 0;
+      let siblings = box.dataset.siblings.split(',');
+      siblings.forEach(sibling => {
+        if (box.dataset.num === 30) console.log(sibling);
+        if (document.querySelector(`[data-num="${sibling}"]`).checked) lives++;
+      })
+
+      return lives;
+    }
+
+    document.querySelector('#next').addEventListener('click', nextGen);
+
+  </script>
+</body>
+</html>
