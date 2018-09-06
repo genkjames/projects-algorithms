@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+  <canvas width="400" height="400"></canvas>
+  <script>
+    // Use the requestAnimationFrame technique that we saw in Chapter 14 and Chapter 16 to draw a box with a bouncing ball in it. The ball moves at a constant speed and bounces off the box’s sides when it hits them.
+
+    let cx = document.querySelector("canvas").getContext("2d");
+    let x = 100, y = 70;
+    let forward = true, down = true;
+
+    let lastTime = null;
+    function frame(time) {
+      if (lastTime != null) {
+        updateAnimation(Math.min(100, time - lastTime) / 1000);
+      }
+      lastTime = time;
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+
+    function updateAnimation(step) {
+      // Your code here.
+      let random = Math.ceil(Math.random() * 7);
+
+      if (forward) {
+        x += (step + random);
+        y += (step + random);
+      } else {
+        x -= (step + random);
+        y -= (step + random);
+      }
+
+      if (x >= 390) forward = false;
+      if (x <= 40) forward = true;
+
+      // const random = Math.ceil(Math.random() * 100);
+      cx.clearRect(0, 0, 400, 400);
+      cx.strokeRect(0, 0, 400, 400);
+      cx.beginPath();
+      cx.arc(x, y, 10, 0, 9);
+      cx.fillStyle = 'green';
+      cx.fill();
+    }
+
+  </script>
+</body>
+</html>
